@@ -181,7 +181,7 @@ def run_game(
         nth_player = int(replay_file[:-4].split("_")[-1])
         
         current_datetime = datetime.datetime.now()
-        datetime_str = current_datetime.strftime("%H-%M-%S")
+        datetime_str = current_datetime.strftime("%H-%M") # -%S
         #replay_file_name = f"last_{datetime_str}.rep"
         #shutil.copy(replay_file, f"{args.game_dir}/{replay_file_name}")
         
@@ -229,6 +229,12 @@ def run_game(
         logger.info(f"game {game_name} recorded")
         
         shutil.copy(f"{args.game_dir}/{game_name}/logs_0/bot.log", f"{args.game_dir}/bot_log.log")
+
+        # Copy log file to games directory for easier access
+        current_datetime = datetime.datetime.now()
+        datetime_str = current_datetime.strftime("%H-%M-%S")
+        replay_file_name = f"_{datetime_str}_{args.bots[1]}.log"
+        shutil.copy(replay_file, f"{args.game_dir}/{replay_file_name}")
 
         return game_result
 
