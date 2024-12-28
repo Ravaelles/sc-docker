@@ -233,8 +233,8 @@ def run_game(
         # Copy log file to games directory for easier access
         current_datetime = datetime.datetime.now()
         datetime_str = current_datetime.strftime("%H-%M-%S")
-        replay_file_name = f"_{datetime_str}_{args.bots[1]}.log"
-        shutil.copy(replay_file, f"{args.game_dir}/{replay_file_name}")
+        log_file_name = f"_{datetime_str}_{args.bots[1]}.log"
+        shutil.copy(f"{args.game_dir}/{game_name}/logs_0/bot.log", f"{args.game_dir}/{log_file_name}")
 
         return game_result
 
