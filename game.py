@@ -228,7 +228,7 @@ def run_game(
             json.dump(info, f, cls=EnumEncoder)
         logger.info(f"game {game_name} recorded")
         
-        shutil.copy(f"{args.game_dir}/{game_name}/logs_0/bot.log", f"{args.game_dir}/bot_log.log")
+#         shutil.copy(f"{args.game_dir}/{game_name}/logs_0/bot.log", f"{args.game_dir}/bot_log.log")
 
         # Copy log file to games directory for easier access
         current_datetime = datetime.datetime.now()
