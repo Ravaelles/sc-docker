@@ -217,7 +217,7 @@ def run_game(
         logger.debug(info)
         with open(f"{args.game_dir}/{game_name}/result.json", "w") as f:
             json.dump(info, f, cls=EnumEncoder)
-        _archive_replay_to_game_dir(args.game_dir, game_name, info)
+        _archive_game_files(args.game_dir, game_name, info)
         logger.info(f"game {game_name} recorded")
 
         return game_result
@@ -225,24 +225,25 @@ def run_game(
     return None
 
 
-def _archive_replay_to_game_dir(game_dir: str, game_name: str, info: dict) -> None:
-    """Copy our bot's replay next to the game folders, named
-    "<HH:MM:SS> <opponent bot name>.rep"."""
+def _archive_game_files(game_dir: str, game_name: str, info: dict) -> None:
+    """Copy our bot's replay and log next to the game folders, named
+    "<HH:MM:SS> <opponent bot name>.rep" and "... .log"."""
     bots = info.get("bots") or []
     if len(bots) < 2:
         return
     opponent = str(bots[1])
-    source = f"{game_dir}/{game_name}/player_0.rep"
-    if not os.path.exists(source):
-        logger.warning(f"Replay '{source}' not found, skipping archive copy")
-        return
     timestamp = datetime.datetime.now().strftime("%H:%M:%S")
-    destination = f"{game_dir}/{timestamp} {opponent}.rep"
-    try:
-        shutil.copy2(source, destination)
-        logger.info(f"Replay copied to '{destination}'")
-    except OSError as e:
-        logger.warning(f"Failed to copy replay to '{destination}': {e}")
+    for source, ext in (("player_0.rep", ".rep"), ("logs_0/bot.log", ".log")):
+        source = f"{game_dir}/{game_name}/{source}"
+        if not os.path.exists(source):
+            logger.warning(f"File '{source}' not found, skipping archive copy")
+            continue
+        destination = f"{game_dir}/{timestamp} {opponent}{ext}"
+        try:
+            shutil.copy2(source, destination)
+            logger.info(f"File copied to '{destination}'")
+        except OSError as e:
+            logger.warning(f"Failed to copy file to '{destination}': {e}")
 
 
 class EnumEncoder(json.JSONEncoder):
